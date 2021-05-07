@@ -28,7 +28,7 @@ public class ClienteDAO {
     public void cadastrar(ClienteDTO clienteDTO) throws SQLException{
         
         ClienteBO clienteBO = new ClienteBO();
-        
+       
       
        try {
         Connection con = Conexao.fazconexao();
@@ -53,7 +53,7 @@ public class ClienteDAO {
              stmt.setString(8, valorSexo);
             
         }
-        
+             
      
       /*  if(clienteDTO.getSexoMasc().isSelected()){
             stmt.setString(8, "m");
@@ -126,6 +126,24 @@ public class ClienteDAO {
              
              JOptionPane.showMessageDialog(null, "excluido com sucesso!");
          }
+    }
+    
+    public static ResultSet  carregaCombo() throws SQLException{
+        ClienteDTO clienteDTO = new ClienteDTO();
+
+            java.sql.Connection con = Conexao.fazconexao();
+            String  sql = "select * from uf ";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            
+            ResultSet rs = stmt.executeQuery();
+          
+            
+    
+            return rs ;
+      
+          
+        
+        
     }
         
     

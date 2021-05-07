@@ -13,9 +13,20 @@ import javax.swing.JRadioButton;
  */
 public class ClienteDTO {
     
-    private String nome, cpf, dataNascimento, logradouro, bairro, cidade,numeroCasa ;
+    private String nome, cpf, dataNascimento, logradouro, bairro, cidade,numeroCasa, estado;
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+    
+    
     private JRadioButton sexoFem,sexoMascListagem,sexoFemListagem;
     private boolean sexoMasc;
+    
     private int  id;
     
     private String nomeListagem, cpfListagem, dataNascimentoListagem, logradouroListagem, bairroListagem, cidadeListagem, 

@@ -11,6 +11,7 @@ import BO.LoginBO;
 import DAO.ClienteDAO;
 import DAO.Conexao;
 import DTO.ClienteDTO;
+import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,6 +35,59 @@ public class ClienteFrame extends javax.swing.JFrame {
      */
     public ClienteFrame() {
         initComponents();
+         try {
+            ClienteDTO clienteDTO = new ClienteDTO();
+            ClienteDAO clienteDAO = new ClienteDAO();
+            
+            
+            ResultSet rs;
+            
+            rs = clienteDAO.carregaCombo();
+            
+            String est;
+            
+          jCUF.addItem("Estado");
+            
+            while(rs.next()){
+                est = rs.getString("estado").trim();
+                
+                jCUF.addItem(est);
+                
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+         atualizarLista();
+    }
+    
+    public void atualizarLista(){
+         try {
+            Connection con = Conexao.fazconexao();
+
+            String  sql = "select * from usuario";
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            ResultSet rs  = stmt.executeQuery();
+
+            DefaultTableModel modelo = (DefaultTableModel) tbDados.getModel();
+            modelo.setNumRows(0);
+
+          while(rs.next()){
+                modelo.addRow(new Object[]{rs.getString("id"), rs.getString("nome"), rs.getString("cpf"), rs.getString("dataNascimento"), rs.getString("Logradouro"),
+                    rs.getString("bairro"), rs.getString("numeroCasa"), rs.getString("sexo")});
+                
+                
+        }
+            
+       //     txtNomeListagem.setText(rs.getString("nome"));
+
+        rs.close();
+        con.close();
+
+        } catch (Exception e) {
+        }
     }
 
       private int linhaSelecionada ;
@@ -79,14 +134,19 @@ public class ClienteFrame extends javax.swing.JFrame {
         txtLogradouro = new javax.swing.JTextField();
         txtNumeroCasa = new javax.swing.JTextField();
         txtCidade = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jCUF = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jRMasculino = new javax.swing.JRadioButton();
         jRFeminino = new javax.swing.JRadioButton();
         jLabel9 = new javax.swing.JLabel();
-        btLimparCampos = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        jPanel11 = new javax.swing.JPanel();
         btCadastrarUsuario = new javax.swing.JButton();
+        btLimparCampos = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbDados = new javax.swing.JTable();
@@ -99,6 +159,10 @@ public class ClienteFrame extends javax.swing.JFrame {
         txtCPFListagem = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txtDataNascListgem = new javax.swing.JTextField();
+        jPanel9 = new javax.swing.JPanel();
+        jRMasculino1 = new javax.swing.JRadioButton();
+        jRFeminino1 = new javax.swing.JRadioButton();
+        jLabel20 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         txtLogradouroListagem = new javax.swing.JTextField();
@@ -106,21 +170,34 @@ public class ClienteFrame extends javax.swing.JFrame {
         txtBairroListagem = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         txtNumeroCasaListagem = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        txtCidadeListagem = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        btAtualizar = new javax.swing.JButton();
+        btExcluir = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
         txtPesquisarNome = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        btExcluir = new javax.swing.JButton();
-        btAtualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
+        AbaConsulta.setBackground(new java.awt.Color(255, 255, 255));
+        AbaConsulta.setOpaque(true);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
+
+        jLabel1.setForeground(new java.awt.Color(51, 51, 0));
         jLabel1.setText("Nome:");
 
+        jLabel2.setForeground(new java.awt.Color(51, 51, 0));
         jLabel2.setText("CPF:");
 
+        jLabel3.setForeground(new java.awt.Color(51, 51, 0));
         jLabel3.setText("Data Nasc:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -160,19 +237,25 @@ public class ClienteFrame extends javax.swing.JFrame {
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Endereço"));
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Endereço", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
 
+        jLabel4.setForeground(new java.awt.Color(51, 51, 0));
         jLabel4.setText("Logradouro:");
 
+        jLabel5.setForeground(new java.awt.Color(51, 51, 0));
         jLabel5.setText("Bairro:");
 
+        jLabel6.setForeground(new java.awt.Color(51, 51, 0));
         jLabel6.setText("Cidade:");
 
+        jLabel7.setForeground(new java.awt.Color(51, 51, 0));
         jLabel7.setText("Número:");
 
+        jLabel8.setForeground(new java.awt.Color(51, 51, 0));
         jLabel8.setText("UF:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCUF.setForeground(new java.awt.Color(27, 187, 125));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -189,12 +272,12 @@ public class ClienteFrame extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtBairro)
-                    .addComponent(txtLogradouro, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .addComponent(txtLogradouro)
                     .addComponent(txtNumeroCasa, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtCidade, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jCUF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 326, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -219,18 +302,23 @@ public class ClienteFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCUF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Sexo"));
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sexo", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
+        jPanel6.setForeground(new java.awt.Color(51, 51, 0));
 
         buttonGroup1.add(jRMasculino);
+        jRMasculino.setForeground(new java.awt.Color(51, 51, 0));
         jRMasculino.setText("Masculino");
 
         buttonGroup1.add(jRFeminino);
+        jRFeminino.setForeground(new java.awt.Color(51, 51, 0));
         jRFeminino.setText("Feminino");
 
+        jLabel9.setForeground(new java.awt.Color(51, 51, 0));
         jLabel9.setText("Sexo:");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -240,11 +328,11 @@ public class ClienteFrame extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
                 .addComponent(jRMasculino)
-                .addGap(18, 18, 18)
+                .addGap(45, 45, 45)
                 .addComponent(jRFeminino)
-                .addGap(47, 47, 47))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,8 +345,38 @@ public class ClienteFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        btLimparCampos.setText("Limpar");
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastre um:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
 
+        jLabel21.setBackground(new java.awt.Color(27, 187, 125));
+        jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(27, 187, 125));
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel21.setText("Novo cliente");
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel21)
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ações", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
+
+        btCadastrarUsuario.setBackground(new java.awt.Color(58, 65, 84));
+        btCadastrarUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btCadastrarUsuario.setForeground(new java.awt.Color(255, 255, 255));
         btCadastrarUsuario.setText("Cadastrar");
         btCadastrarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,24 +384,52 @@ public class ClienteFrame extends javax.swing.JFrame {
             }
         });
 
+        btLimparCampos.setBackground(new java.awt.Color(217, 81, 51));
+        btLimparCampos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btLimparCampos.setForeground(new java.awt.Color(255, 255, 255));
+        btLimparCampos.setText("Cancelar");
+        btLimparCampos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLimparCamposActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btLimparCampos, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btCadastrarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btCadastrarUsuario)
+                    .addComponent(btLimparCampos))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btLimparCampos)
-                        .addGap(18, 18, 18)
-                        .addComponent(btCadastrarUsuario)))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -296,37 +442,61 @@ public class ClienteFrame extends javax.swing.JFrame {
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btLimparCampos)
-                    .addComponent(btCadastrarUsuario))
-                .addGap(23, 23, 23))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         AbaConsulta.addTab("Cadastro", jPanel1);
+
+        jPanel12.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel22.setBackground(new java.awt.Color(27, 187, 125));
+        jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(27, 187, 125));
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setText("Em Contrução =)");
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, 890, Short.MAX_VALUE)
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                .addContainerGap(172, Short.MAX_VALUE)
+                .addComponent(jLabel22)
+                .addGap(185, 185, 185))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 784, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 355, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         AbaConsulta.addTab("Consulta", jPanel2);
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
         tbDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nome", "cpf", "DataNascimento", "Logradouro", "Bairro", "Numero Casa"
+                "Id", "Nome", "cpf", "DataNascimento", "Logradouro", "Bairro", "Numero Casa", "Sexo"
             }
         ));
         tbDados.setColumnSelectionAllowed(true);
@@ -337,14 +507,18 @@ public class ClienteFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tbDados);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Ediçao de Pessoa"));
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ediçao de Pessoa", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
 
+        jLabel10.setForeground(new java.awt.Color(51, 51, 0));
         jLabel10.setText("ID:");
 
         jLabelID.setText("0");
 
+        jLabel12.setForeground(new java.awt.Color(51, 51, 0));
         jLabel12.setText("Nome");
 
+        jLabel13.setForeground(new java.awt.Color(51, 51, 0));
         jLabel13.setText("CPF:");
 
         txtCPFListagem.addActionListener(new java.awt.event.ActionListener() {
@@ -353,7 +527,42 @@ public class ClienteFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel14.setForeground(new java.awt.Color(51, 51, 0));
         jLabel14.setText("Data Nascimento");
+
+        jPanel9.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sexo", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
+
+        buttonGroup1.add(jRMasculino1);
+        jRMasculino1.setText("Masculino");
+
+        buttonGroup1.add(jRFeminino1);
+        jRFeminino1.setText("Feminino");
+
+        jLabel20.setText("Sexo:");
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jRMasculino1)
+                .addGap(18, 18, 18)
+                .addComponent(jRFeminino1)
+                .addGap(50, 50, 50))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRMasculino1)
+                    .addComponent(jRFeminino1)
+                    .addComponent(jLabel20))
+                .addGap(0, 6, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -361,23 +570,25 @@ public class ClienteFrame extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtDataNascListgem, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel10))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelID, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtNomeListagem)
-                                .addComponent(txtCPFListagem, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
+                            .addComponent(jLabel14)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txtDataNascListgem, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel13)
+                                .addComponent(jLabel10))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabelID, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtNomeListagem)
+                                    .addComponent(txtCPFListagem, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)))))
+                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -398,68 +609,42 @@ public class ClienteFrame extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
                     .addComponent(txtDataNascListgem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Ediçao de Endereço"));
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ediçao de Endereço", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(51, 51, 0))); // NOI18N
 
+        jLabel15.setForeground(new java.awt.Color(51, 51, 0));
         jLabel15.setText("Logradouro:");
 
+        jLabel16.setForeground(new java.awt.Color(51, 51, 0));
         jLabel16.setText("Bairro");
 
+        jLabel17.setForeground(new java.awt.Color(51, 51, 0));
         jLabel17.setText("Numero da Casa");
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtBairroListagem)
-                    .addComponent(txtLogradouroListagem)
-                    .addComponent(txtNumeroCasaListagem, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
-                .addContainerGap(33, Short.MAX_VALUE))
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
-                    .addComponent(txtLogradouroListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(txtBairroListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17)
-                    .addComponent(txtNumeroCasaListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(52, Short.MAX_VALUE))
-        );
+        jLabel11.setForeground(new java.awt.Color(51, 51, 0));
+        jLabel11.setText("Cidade:");
 
-        jLabel18.setText("Pesquisar:");
+        jLabel19.setForeground(new java.awt.Color(51, 51, 0));
+        jLabel19.setText("UF:");
 
-        jButton2.setText("pesquisar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btAtualizar.setBackground(new java.awt.Color(58, 65, 84));
+        btAtualizar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btAtualizar.setForeground(new java.awt.Color(255, 255, 255));
+        btAtualizar.setText("Atualizar");
+        btAtualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btAtualizarActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Listar todos");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
+        btExcluir.setBackground(new java.awt.Color(217, 81, 51));
+        btExcluir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btExcluir.setForeground(new java.awt.Color(255, 255, 255));
         btExcluir.setText("Excluir");
         btExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -467,10 +652,93 @@ public class ClienteFrame extends javax.swing.JFrame {
             }
         });
 
-        btAtualizar.setText("Atualizar");
-        btAtualizar.addActionListener(new java.awt.event.ActionListener() {
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel19))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtBairroListagem)
+                                    .addComponent(txtLogradouroListagem)
+                                    .addComponent(txtNumeroCasaListagem, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                    .addComponent(txtCidadeListagem))
+                                .addContainerGap(45, Short.MAX_VALUE))
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(txtLogradouroListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(txtBairroListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtCidadeListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(txtNumeroCasaListagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel19)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btExcluir)
+                            .addComponent(btAtualizar)))))
+        );
+
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(51, 51, 0));
+        jLabel18.setText("Pesquisar:");
+
+        jButton2.setBackground(new java.awt.Color(153, 153, 255));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("pesquisar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAtualizarActionPerformed(evt);
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setBackground(new java.awt.Color(102, 102, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Listar todos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -493,13 +761,9 @@ public class ClienteFrame extends javax.swing.JFrame {
                         .addComponent(txtPesquisarNome, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
-                        .addComponent(btAtualizar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btExcluir)
-                        .addGap(24, 24, 24))))
+                        .addGap(28, 28, 28))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -509,9 +773,7 @@ public class ClienteFrame extends javax.swing.JFrame {
                     .addComponent(jLabel18)
                     .addComponent(txtPesquisarNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2)
-                    .addComponent(jButton1)
-                    .addComponent(btExcluir)
-                    .addComponent(btAtualizar))
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -535,10 +797,15 @@ public class ClienteFrame extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btCadastrarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastrarUsuarioActionPerformed
-       try { 
+      
+        
+        
+        
+        try { 
        // String nome = txtNome.getText();
         
         ClienteBO clienteBO = new ClienteBO();
@@ -553,7 +820,6 @@ public class ClienteFrame extends javax.swing.JFrame {
         clienteDTO.setCidade(txtCidade.getText());
         clienteDTO.setNumeroCasa((txtNumeroCasa.getText()));
         clienteDTO.setSexoMasc(jRMasculino.isSelected());
-        
         
         
         if(clienteDTO.getNome().equals("")){
@@ -589,7 +855,7 @@ public class ClienteFrame extends javax.swing.JFrame {
 
             while(rs.next()){
                 modelo.addRow(new Object[]{rs.getString("id"), rs.getString("nome"), rs.getString("cpf"), rs.getString("dataNascimento"), rs.getString("Logradouro"),
-                    rs.getString("bairro"), rs.getString("Cidade"), });
+                    rs.getString("bairro"), rs.getString("numeroCasa"), rs.getString("sexo")});
                 
                 
         }
@@ -655,6 +921,11 @@ public class ClienteFrame extends javax.swing.JFrame {
                 txtBairroListagem.setText((String) tbDados.getModel().getValueAt(linha, 5));
                 txtCidade.setText((String) tbDados.getModel().getValueAt(linha, 6));
                 jLabelID.setText((String) tbDados.getModel().getValueAt(linha, 0));
+               // txtCidadeListagem.setText((String) tbDados.getModel().getValueAt(linha, 0));
+                txtNumeroCasaListagem.setText((String) tbDados.getModel().getValueAt(linha, 0));
+                
+                
+                
                 
                 
                 
@@ -662,6 +933,16 @@ public class ClienteFrame extends javax.swing.JFrame {
 
     private void btExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirActionPerformed
 
+        if(tbDados.getSelectedRow()==-1){
+            JOptionPane.showMessageDialog(this, "Selecione um registro!");
+        }else{
+            String menssagem = "Realmente deseja escluir esse registro?";
+        String titulo = "Confirma Exclusão";
+        
+        int jo = JOptionPane.showConfirmDialog(this, menssagem,titulo, JOptionPane.YES_NO_OPTION);
+        
+        if(jo == JOptionPane.YES_OPTION){
+       
         try {
             
             int linhaSecionada = tbDados.getSelectedRow();
@@ -685,11 +966,21 @@ public class ClienteFrame extends javax.swing.JFrame {
             stmt.close();
             con.close();
             
+               atualizarLista();
+            
             JOptionPane.showMessageDialog(null, "excluido com sucesso!");
         } catch (SQLException ex) {
             Logger.getLogger(ClienteFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     
+        }else{
+            atualizarLista();
+        }
+        
+             
+        }
+        
+        
        
        
     }//GEN-LAST:event_btExcluirActionPerformed
@@ -721,12 +1012,18 @@ public class ClienteFrame extends javax.swing.JFrame {
             con.close();
             
             
+            atualizarLista();
             
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (SQLException ex) {
             Logger.getLogger(ClienteFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btAtualizarActionPerformed
+
+    private void btLimparCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimparCamposActionPerformed
+       
+       
+    }//GEN-LAST:event_btLimparCamposActionPerformed
 
     public JTable getTbDados() {
         return tbDados;
@@ -782,9 +1079,11 @@ public class ClienteFrame extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jCUF;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -792,7 +1091,11 @@ public class ClienteFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -802,6 +1105,9 @@ public class ClienteFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelID;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -809,14 +1115,18 @@ public class ClienteFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JRadioButton jRFeminino;
+    private javax.swing.JRadioButton jRFeminino1;
     private javax.swing.JRadioButton jRMasculino;
+    private javax.swing.JRadioButton jRMasculino1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbDados;
     private javax.swing.JTextField txtBairro;
     private javax.swing.JTextField txtBairroListagem;
     private javax.swing.JTextField txtCPFListagem;
     private javax.swing.JTextField txtCidade;
+    private javax.swing.JTextField txtCidadeListagem;
     private javax.swing.JTextField txtCpf;
     private javax.swing.JTextField txtDataNasc;
     private javax.swing.JTextField txtDataNascListgem;

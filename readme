@@ -1,18 +1,20 @@
 SISTEMA DE CADASTRO DE CLIENTE
-Este Sistema foi feito com base no cursos que realizo no site da devmedia.com.br , é um crud de cadastro de cliente.
+
+Este Sistema é um crud de cadastro de cliente.
+
 Este Sistema foi feito usando a tecnologia javaSE e suas principais classes ou seja é um sistema Desktop.
+
 O sistema faz validações: de login, campos obrigatórios.
+
 O sistema faz cadastro, alteração, listagem de dados, consulta de dados com filtros .
+
 Tecnologia Ultilizada:
+
 Banco de dados:
 MYSQL
 
-As telas fora desenvovida com:
-Javax.swing
-Usando o plugin: WindowsBuilder
-
 IDE:
-Eclipse
+netbeans
 
 Apesar de ser Descktop foi usados os seguintes Padrão de Projetos:
 DAO

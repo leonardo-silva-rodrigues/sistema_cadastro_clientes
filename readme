@@ -26,3 +26,4 @@ Validações :
 O sistema conta com validações , que foram feita ultilizando Exceptions Personalizadas. Dentre elas: Verifica se os campos de login são validos com os que estao registrado no banco.
 Verifica se os campos para cadastra um cliente foram todos preenchidos
 Verifica se o cpf é valido : numero de caracteres, se contem só numeros
+
